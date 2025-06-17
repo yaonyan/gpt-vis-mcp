@@ -1,0 +1,24 @@
+{
+  "name": "node-api",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.10.0",
+  "dependencies": {
+    "@antv/gpt-vis-ssr": "^0.1.6",
+    "@mcpc/core": "npm:@jsr/mcpc__core@^0.0.28",
+    "@modelcontextprotocol/sdk": "^1.12.3",
+    "ai": "^4.3.16",
+    "canvas": "^2.11.2"
+  },
+  "devDependencies": {
+    "tsx": "^4.20.3"
+  }
+}
