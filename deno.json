@@ -1,0 +1,16 @@
+{
+    "name": "@yao/gpt-vis-mcp",
+    "version": "0.0.1",
+    "nodeModulesDir": "auto",
+    "imports": {
+        "@antv/gpt-vis-ssr": "npm:@antv/gpt-vis-ssr@^0.1.6",
+        "@deno/dnt": "jsr:@deno/dnt@^0.42.1",
+        "@mcpc/core": "jsr:/@mcpc/core@^0.0.28",
+        "@modelcontextprotocol/sdk": "npm:@modelcontextprotocol/sdk@^1.8.0",
+        "ai": "npm:ai@^4.3.4",
+        "canvas": "npm:canvas@3.1.0"
+    },
+    "exports": {
+        "./bin": "./stdio.server.ts"
+    }
+}

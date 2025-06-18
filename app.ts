@@ -8,6 +8,7 @@ import { mkdir } from "node:fs/promises";
 
 const RENDERED_IMAGE_PATH =
   process.env.RENDERED_IMAGE_PATH ?? join("/tmp", tmpdir());
+const RENDERED_IMAGE_HOST_PATH = process.env.RENDERED_IMAGE_HOST_PATH;
 
 // Ensure directory exists at startup
 try {
@@ -53,14 +54,16 @@ const registerToolWithNewExcuter = (tool: any) => {
         const id = generateId(8);
         const path = join(RENDERED_IMAGE_PATH, `${id}.png`);
 
-        await vis.exportToFile(path, {});
+        vis.exportToFile(path, {});
 
         return {
           isError: false,
           content: [
             {
               type: "text",
-              text: `Generated image saved to ${path}`,
+              text: RENDERED_IMAGE_HOST_PATH
+                ? `Image generated successfully: ${RENDERED_IMAGE_HOST_PATH}/${id}.png`
+                : `Image generated and saved to ${path}`,
             },
           ],
         };
