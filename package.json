@@ -1,6 +1,6 @@
 {
   "name": "@yaonyan/gpt-vis-mcp",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "type": "module",
   "description": "A private standalone wrapper for [antvis/mcp-server-chart]",
   "scripts": {
@@ -16,7 +16,9 @@
       "default": "./dist/index.mjs"
     }
   },
-  "bin": "./dist/stdio.server.js",
+  "bin": {
+    "gpt-vis-mcp": "./dist/stdio.server.js"
+  },
   "keywords": [
     "gpt-vis-mcp",
     "mcp",
@@ -24,6 +26,11 @@
   ],
   "author": "i@mcpc.tech",
   "license": "MIT",
+  "files": [
+    "README.md",
+    "LICENSE",
+    "dist"
+  ],
   "dependencies": {
     "@antv/gpt-vis-ssr": "^0.1.6",
     "@mcpc/core": "npm:@jsr/mcpc__core@^0.0.28",
@@ -35,5 +42,8 @@
     "pkgroll": "^2.13.1",
     "tsx": "^4.20.3",
     "typescript": "^5.8.3"
+  },
+  "volta": {
+    "node": "18.20.8"
   }
 }
