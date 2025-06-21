@@ -41,8 +41,8 @@ interface ServerConfig {
 
 // Configuration
 const config: ServerConfig = {
-  renderedImagePath: process.env.RENDERED_IMAGE_PATH ??
-    join(tmpdir(), "gpt-vis-charts"),
+  renderedImagePath:
+    process.env.RENDERED_IMAGE_PATH ?? join(tmpdir(), "gpt-vis-charts"),
   renderedImageHostPath: process.env.RENDERED_IMAGE_HOST_PATH,
   port: parseInt(process.env.PORT ?? "3000", 10),
 };
@@ -59,12 +59,12 @@ async function initializeImageDirectory(): Promise<void> {
     } catch (error) {
       console.error(
         `❌ Failed to create directory ${config.renderedImagePath}:`,
-        error,
+        error
       );
       throw new Error(
         `Failed to initialize image directory: ${
           error instanceof Error ? error.message : String(error)
-        }`,
+        }`
       );
     }
   }
@@ -172,14 +172,14 @@ export async function startHttpServer(): Promise<void> {
             "Content-Type": "application/json",
             ...corsHeaders,
           },
-        },
+        }
       );
     }
 
     // Chart generation endpoint
     if (url.pathname === "/generate" && request.method === "POST") {
       try {
-        const requestBody = await request.json() as ChartRequest;
+        const requestBody = (await request.json()) as ChartRequest;
         const result = await generateChart(requestBody);
 
         return new Response(JSON.stringify(result), {
@@ -189,9 +189,8 @@ export async function startHttpServer(): Promise<void> {
           },
         });
       } catch (error) {
-        const errorMessage = error instanceof Error
-          ? error.message
-          : String(error);
+        const errorMessage =
+          error instanceof Error ? error.message : String(error);
 
         return new Response(
           JSON.stringify({
@@ -204,7 +203,7 @@ export async function startHttpServer(): Promise<void> {
               "Content-Type": "application/json",
               ...corsHeaders,
             },
-          },
+          }
         );
       }
     }

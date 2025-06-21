@@ -44,7 +44,14 @@ You may experience `canvas` dependencies issue when using npx, if so, try option
   "mcpServers": {
     "gpt-vis-mcp": {
       "command": "docker",
-      "args": ["run", "--rm", "ghcr.io/yaonyan/gpt-vis-mcp:latest-mcp"]
+      "args": [
+        "run",
+        "--interactive",
+        "--rm",
+        "-v",
+        "/tmp/gpt-vis-charts:/tmp/gpt-vis-charts",
+        "ghcr.io/yaonyan/gpt-vis-mcp:latest-mcp"
+      ]
     }
   }
 }
@@ -61,12 +68,13 @@ Set environment variables as needed:
 
 ```bash
 # Run SSR API server
-docker run -p 3000:3000 ghcr.io/yaonyan/gpt-vis-mcp:latest-http
+docker run -p 3000:3000 -e RENDERED_IMAGE_HOST_PATH=http://localhost:3000 ghcr.io/yaonyan/gpt-vis-mcp:latest-http
 
 # Test the SSR API
-curl -X POST http://localhost:3000/generate \
-  -H "Content-Type: application/json" \
-  -d '{"type": "pie", "data": [{"category": "A", "value": 30}, {"category": "B", "value": 70}]}'
+❯ curl -X POST http://localhost:3000/generate \
+             -H "Content-Type: application/json" \
+             -d '{"type": "pie", "data": [{"category": "A", "value": 30}, {"category": "B", "value": 70}]}'
+{"success":true,"resultObj":"http://localhost:3000/charts/chart_1750500506056_T6IC0Vtp.png"}
 ```
 
 ## 🤝 Contributing
