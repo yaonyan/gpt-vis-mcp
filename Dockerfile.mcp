@@ -71,4 +71,4 @@ LABEL org.opencontainers.image.title="gpt-vis-mcp"
 LABEL org.opencontainers.image.description="GPT-Vis MCP Server - MCP Mode"
 
 # Set the entrypoint to directly run the stdio server
-CMD ["deno", "run", "--allow-all", "stdio.server.ts"]
+CMD ["deno", "run", "--cached-only", "--allow-all", "stdio.server.ts"]

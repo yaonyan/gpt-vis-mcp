@@ -14,7 +14,7 @@ jobs:
 
     strategy:
       matrix:
-        mode: [mcp, http]
+        mode: [mcp, ssr]
 
     steps:
       - uses: actions/checkout@v4
