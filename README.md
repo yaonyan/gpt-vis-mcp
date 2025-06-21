@@ -94,7 +94,10 @@ You can then use the SSR server with the upstream `@antv/mcp-server-chart` by sp
 }
 ```
 
-This allows you to use the original MCP server while leveraging your local SSR endpoint for chart generation.
+This allows you to use the original MCP server while leveraging your private SSR endpoint for chart generation.
+
+![VIS_REQUEST_SERVER example](https://github.com/user-attachments/assets/b763566a-f186-4203-a8e1-ea7df1aa7e30)
+
 
 ## 🤝 Contributing
 
