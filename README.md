@@ -69,15 +69,6 @@ curl -X POST http://localhost:3000/generate \
   -d '{"type": "pie", "data": [{"category": "A", "value": 30}, {"category": "B", "value": 70}]}'
 ```
 
-### Binary
-
-```bash
-# Download binary from releases
-curl -L https://github.com/yaonyan/gpt-vis-mcp/releases/latest/download/gpt-vis-mcp -o gpt-vis-mcp
-chmod +x gpt-vis-mcp
-./gpt-vis-mcp
-```
-
 ## 🤝 Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup.

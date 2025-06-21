@@ -4,6 +4,7 @@
     "jsr:@david/code-block-writer@^13.0.2": "13.0.3",
     "jsr:@deno/cache-dir@0.20": "0.20.1",
     "jsr:@deno/dnt@~0.42.1": "0.42.1",
+    "jsr:@deno/graph@0.86": "0.86.9",
     "jsr:@es-toolkit/es-toolkit@^1.37.2": "1.39.3",
     "jsr:@mcpc/core@^0.0.28": "0.0.28",
     "jsr:@std/bytes@^1.0.5": "1.0.6",
@@ -45,6 +46,7 @@
     "@deno/cache-dir@0.20.1": {
       "integrity": "dc4f3add14307f3ff3b712441ea4acabcbfc9a13f67c5adc78c3aac16ac5e2a0",
       "dependencies": [
+        "jsr:@deno/graph",
         "jsr:@std/fmt@^1.0.3",
         "jsr:@std/fs@^1.0.6",
         "jsr:@std/io",
@@ -61,6 +63,9 @@
         "jsr:@std/path@1",
         "jsr:@ts-morph/bootstrap"
       ]
+    },
+    "@deno/graph@0.86.9": {
+      "integrity": "c4f353a695bcc5246c099602977dabc6534eacea9999a35a8cb24e807192e6a1"
     },
     "@es-toolkit/es-toolkit@1.39.3": {
       "integrity": "edd98c3eac732730b61bac8952a31633a778a236e1be144aa32b220c152d1fbe"

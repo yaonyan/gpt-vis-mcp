@@ -98,8 +98,8 @@ try {
 const tools = await composeMcpDepTools({
   mcpServers: {
     "mcp-server-chart": {
-      command: "npx",
-      args: ["-y", "@antv/mcp-server-chart"],
+      command: "deno",
+      args: ["run", "--allow-all", "npm:@antv/mcp-server-chart@0.7.1"],
     },
   },
 });
@@ -110,7 +110,7 @@ const tools = await composeMcpDepTools({
 export const server = new ComposableMCPServer(
   {
     name: "gpt-vis-mcp",
-    version: "0.0.3",
+    version: "0.0.5",
   },
   { capabilities: { tools: {} } },
 );

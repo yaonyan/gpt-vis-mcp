@@ -14,10 +14,11 @@
 git clone https://github.com/yaonyan/gpt-vis-mcp.git
 cd gpt-vis-mcp
 deno install --allow-scripts=npm:canvas@3.1.0
+cp -rf node_modules/.deno/canvas@3.1.0/node_modules node_modules/.deno/canvas@2.11.2/
 
 # Start development
-deno run -A --watch server.ts http    # HTTP mode
-deno run -A --watch server.ts mcp     # MCP mode
+deno run -A --watch ssr.server.ts     # SSR mode
+deno run -A --watch stdio.server.ts   # MCP mode
 ```
 
 ## 🛠️ Development Commands
@@ -31,7 +32,8 @@ deno test --allow-all --coverage
 deno fmt && deno lint
 
 # Build binary
-deno compile --allow-scripts=npm:canvas@3.1.0 --allow-net --allow-read --allow-write --allow-env --output bin/gpt-vis-mcp server.ts
+deno compile --allow-scripts=npm:canvas@3.1.0 --allow-net --allow-read --allow-write --allow-env --output bin/gpt-vis-mcp-ssr ssr.server.ts
+deno compile --allow-scripts=npm:canvas@3.1.0 --allow-net --allow-read --allow-write --allow-env --output bin/gpt-vis-mcp-stdio stdio.server.ts
 ```
 
 ## 🐳 Docker Development
@@ -39,11 +41,15 @@ deno compile --allow-scripts=npm:canvas@3.1.0 --allow-net --allow-read --allow-w
 ```bash
 # Build images
 docker build -f Dockerfile.mcp -t gpt-vis-mcp:mcp .
-docker build -f Dockerfile.http -t gpt-vis-mcp:http .
+docker build -f Dockerfile.ssr -t gpt-vis-mcp:ssr .
 
 # Test
-docker run -p 3000:3000 gpt-vis-mcp:http
+docker run -p 3000:3000 gpt-vis-mcp:ssr
 curl http://localhost:3000/health
+
+# Or use docker-compose
+docker-compose --profile ssr up     # SSR mode
+docker-compose --profile mcp up     # MCP mode
 ```
 
 ## 📁 Project Structure
@@ -51,12 +57,12 @@ curl http://localhost:3000/health
 ```
 gpt-vis-mcp/
 ├── app.ts              # MCP server logic
-├── http.server.ts      # HTTP server
-├── server.ts           # Entry point
+├── stdio.server.ts     # MCP stdio server
+├── ssr.server.ts       # SSR HTTP server
 ├── constant.ts         # Chart mappings
 ├── tests/              # Test files
 ├── Dockerfile.mcp      # MCP container
-├── Dockerfile.http     # HTTP container
+├── Dockerfile.ssr      # SSR container
 └── docker-compose.yml  # Compose config
 ```
 
@@ -111,7 +117,7 @@ Deno.test("chart generation", async () => {
 2. **Permissions**
 
    ```bash
-   deno run --allow-all server.ts
+   deno run --allow-all ssr.server.ts
    ```
 
 3. **Docker Cache**

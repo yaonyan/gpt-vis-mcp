@@ -39,8 +39,7 @@ RUN echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen && \
 
 # Install Node.js (latest LTS) and node-gyp - required for canvas
 RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - \
-    && apt-get install -y nodejs \
-    && npm install -g node-gyp
+    && apt-get install -y nodejs 
 
 # Set working directory
 WORKDIR /app
@@ -54,8 +53,7 @@ ENV RENDERED_IMAGE_PATH=/tmp/gpt-vis-charts \
     DENO_INSTALL_ROOT=/deno-dir/install-root \
     LANG=zh_CN.UTF-8 \
     LANGUAGE=zh_CN:zh \
-    LC_ALL=zh_CN.UTF-8 \
-    MODE=mcp
+    LC_ALL=zh_CN.UTF-8 
 
 # Create necessary directories
 RUN mkdir -p $DENO_DIR $RENDERED_IMAGE_PATH
@@ -66,24 +64,12 @@ COPY . .
 # Install and cache dependencies
 RUN deno install --allow-scripts=npm:canvas@3.1.0 && \
     cp -rf node_modules/.deno/canvas@3.1.0/node_modules node_modules/.deno/canvas@2.11.2/ 2>/dev/null || true && \
-    deno cache --allow-scripts=npm:canvas@3.1.0 server.ts
-
-# Create MCP start script
-RUN echo '#!/bin/bash\n\
-    set -e\n\
-    echo "🐳 GPT-Vis MCP Server starting..."\n\
-    echo "📂 Working directory: $(pwd)"\n\
-    echo "📁 Image directory: $RENDERED_IMAGE_PATH"\n\
-    echo "🔌 Starting MCP stdio mode..."\n\
-    deno run --allow-all server.ts mcp' > /start.sh
-
-# Make the start script executable
-RUN chmod +x /start.sh
+    deno cache stdio.server.ts
 
 # Labels for image identification
 LABEL org.opencontainers.image.source="https://github.com/yaonyan/gpt-vis-mcp"
 LABEL org.opencontainers.image.title="gpt-vis-mcp"
 LABEL org.opencontainers.image.description="GPT-Vis MCP Server - MCP Mode"
 
-# Set the entrypoint
-CMD ["/start.sh"]
+# Set the entrypoint to directly run the stdio server
+CMD ["deno", "run", "--allow-all", "stdio.server.ts"]
