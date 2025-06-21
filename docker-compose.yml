@@ -1,0 +1,64 @@
+version: "3.8"
+
+services:
+  # MCP Mode - for integration with Claude Desktop
+  gpt-vis-mcp:
+    build:
+      context: .
+      dockerfile: Dockerfile.mcp
+    image: ghcr.io/yaonyan/gpt-vis-mcp:latest-mcp
+    container_name: gpt-vis-mcp
+    volumes:
+      - gpt-vis-charts:/tmp/gpt-vis-charts
+    environment:
+      - RENDERED_IMAGE_PATH=/tmp/gpt-vis-charts
+      # - RENDERED_IMAGE_HOST_PATH=https://your-domain.com/charts
+    profiles:
+      - mcp
+
+  # HTTP Mode - for REST API access
+  gpt-vis-http:
+    build:
+      context: .
+      dockerfile: Dockerfile.http
+    image: ghcr.io/yaonyan/gpt-vis-mcp:latest-http
+    container_name: gpt-vis-http
+    ports:
+      - "3000:3000"
+    volumes:
+      - gpt-vis-charts:/tmp/gpt-vis-charts
+    environment:
+      - MODE=http
+      - PORT=3000
+      - RENDERED_IMAGE_PATH=/tmp/gpt-vis-charts
+      # - RENDERED_IMAGE_HOST_PATH=https://your-domain.com/charts
+      # - VIS_REQUEST_SERVER=https://your-gpt-vis-ssr.com
+    profiles:
+      - http
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Optional: nginx for serving generated images in HTTP mode
+  nginx:
+    image: nginx:alpine
+    container_name: gpt-vis-nginx
+    ports:
+      - "8080:80"
+    volumes:
+      - gpt-vis-charts:/usr/share/nginx/html/charts:ro
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - gpt-vis-http
+    restart: unless-stopped
+    profiles:
+      - http
+      - nginx
+
+volumes:
+  gpt-vis-charts:
+    driver: local

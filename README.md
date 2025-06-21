@@ -1,53 +1,86 @@
-# Private/standalone MCP Server Chart Wrapper
+# GPT-Vis MCP Server
 
-This project provides a **private standalone wrapper** for [antvis/mcp-server-chart](https://github.com/antvis/mcp-server-chart), featuring:
+A **local wrapper** for
+[antvis/mcp-server-chart](https://github.com/antvis/mcp-server-chart) that
+generates charts locally without external server dependencies.
 
-- No external server dependency
-- Local execution via Model Context Protocol (MCP)
-- Direct integration with [GPT-Vis](https://github.com/antvis/GPT-Vis) visualization framework
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Version](https://img.shields.io/badge/version-0.1.0-blue.svg)](https://github.com/yaonyan/gpt-vis-mcp)
 
-## Installation
+## ✨ Features
+
+- 🔒 **Private & Secure**: Local chart generation, no external dependencies
+- 🚀 **Easy Setup**: One command installation for Claude Desktop
+- 🎨 **Rich Charts**: 25+ chart types (pie, line, bar, radar, maps, etc.)
+- 📊 **Enterprise Ready**: Perfect for secure environments
+
+## 🚀 Usage
+
+### Claude Desktop (Recommended)
+
+Add to your Claude Desktop MCP settings:
+
+**Option 1: NPX (Recommended)**
 
 ```json
 {
   "mcpServers": {
     "gpt-vis-mcp": {
       "command": "npx",
-      "args": ["@jsr2npm/yao__gpt-vis-mcp@0.0.1"]
+      "args": ["@jsr2npm/yao__gpt-vis-mcp@0.0.3"]
     }
   }
 }
 ```
 
-## Configuration
+You may experience `canvas` dependencies issue when using npx, if so, try option
+2
 
-The server supports the following environment variables for configuring image rendering:
+**Option 2: Docker**
 
-### `RENDERED_IMAGE_PATH`
+```json
+{
+  "mcpServers": {
+    "gpt-vis-mcp": {
+      "command": "docker",
+      "args": ["run", "--rm", "ghcr.io/yaonyan/gpt-vis-mcp:latest-mcp"]
+    }
+  }
+}
+```
 
-- **Description**: Directory path where generated chart images will be saved
-- **Default**: `/tmp` + system temporary directory (e.g., `/tmp/var/folders/...`)
-- **Example**: 
-  ```bash
-  export RENDERED_IMAGE_PATH="/home/user/charts"
-  ```
+Set environment variables as needed:
 
-### `RENDERED_IMAGE_HOST_PATH`
+| Variable                   | Description                   | Default     |
+| -------------------------- | ----------------------------- | ----------- |
+| `RENDERED_IMAGE_PATH`      | Chart images directory        | system temp |
+| `RENDERED_IMAGE_HOST_PATH` | Base URL for accessing images | (optional)  |
 
-- **Description**: Base URL or path prefix for accessing generated images from a web server or host
-- **Default**: `undefined` (when not set, returns the local file path)
-- **Example**: 
-  ```bash
-  export RENDERED_IMAGE_HOST_PATH="https://example.com/images"
-  ```
+### Docker SSR Server
 
-When `RENDERED_IMAGE_HOST_PATH` is set, the server will return URLs like `https://example.com/images/{id}.png` instead of local file paths. This is useful when:
-- Serving images through a web server
-- Accessing images from a different host or domain
+```bash
+# Run SSR API server
+docker run -p 3000:3000 ghcr.io/yaonyan/gpt-vis-mcp:latest-http
 
-## Credits
+# Test the SSR API
+curl -X POST http://localhost:3000/generate \
+  -H "Content-Type: application/json" \
+  -d '{"type": "pie", "data": [{"category": "A", "value": 30}, {"category": "B", "value": 70}]}'
+```
 
-- [GPT-Vis](https://github.com/antvis/GPT-Vis) visualization framework
-- [MCP server chart](https://github.com/antvis/mcp-server-chart) protocol integration
+### Binary
 
-> This repo is using [jsr2npm](https://github.com/yaonyan/jsr2npm) to port jsr package to npm.
+```bash
+# Download binary from releases
+curl -L https://github.com/yaonyan/gpt-vis-mcp/releases/latest/download/gpt-vis-mcp -o gpt-vis-mcp
+chmod +x gpt-vis-mcp
+./gpt-vis-mcp
+```
+
+## 🤝 Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup.
+
+## 📄 License
+
+MIT License - see [LICENSE](LICENSE)
