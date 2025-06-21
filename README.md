@@ -34,8 +34,7 @@ Add to your Claude Desktop MCP settings:
 }
 ```
 
-You may experience `canvas` dependencies issue when using npx, if so, try option
-2
+You may experience `canvas` dependency issues and font rendering issues when using npx. If so, try option 2.
 
 **Option 2: Docker**
 
@@ -66,9 +65,11 @@ Set environment variables as needed:
 
 ### Docker SSR Server
 
+We also provide an SSR Server that follows the requirements of https://github.com/antvis/mcp-server-chart?tab=readme-ov-file#-private-deployment
+
 ```bash
 # Run SSR API server
-docker run -p 3000:3000 -e RENDERED_IMAGE_HOST_PATH=http://localhost:3000 ghcr.io/yaonyan/gpt-vis-mcp:latest-http
+docker run -p 3000:3000 -e RENDERED_IMAGE_HOST_PATH=http://localhost:3000/charts ghcr.io/yaonyan/gpt-vis-mcp:latest-http
 
 # Test the SSR API
 ❯ curl -X POST http://localhost:3000/generate \
