@@ -54,8 +54,8 @@ interface MCPTool {
 
 // Server configuration with environment variable support
 const config: ServerConfig = {
-  renderedImagePath: process.env.RENDERED_IMAGE_PATH ??
-    join(tmpdir(), "gpt-vis-charts"),
+  renderedImagePath:
+    process.env.RENDERED_IMAGE_PATH ?? join(tmpdir(), "gpt-vis-charts"),
   renderedImageHostPath: process.env.RENDERED_IMAGE_HOST_PATH,
 };
 
@@ -78,12 +78,12 @@ async function initializeImageDirectory(): Promise<void> {
     } catch (error) {
       console.error(
         `❌ Failed to create directory ${config.renderedImagePath}:`,
-        error,
+        error
       );
       throw new Error(
         `Failed to initialize image directory: ${
           error instanceof Error ? error.message : String(error)
-        }`,
+        }`
       );
     }
   }
@@ -112,12 +112,17 @@ const tools = await composeMcpDepTools({
   mcpServers: {
     "mcp-server-chart": {
       command: "deno",
-      args: ["run", "--allow-all", "npm:@antv/mcp-server-chart@0.7.1"],
+      args: [
+        "run",
+        "--cached-only",
+        "--allow-all",
+        "npm:@antv/mcp-server-chart@0.7.1",
+      ],
     },
   },
 });
 console.log(
-  `📊 Discovered ${Object.keys(tools).length} tools from upstream server`,
+  `📊 Discovered ${Object.keys(tools).length} tools from upstream server`
 );
 
 /**
@@ -129,7 +134,7 @@ export const server = new ComposableMCPServer(
     name: "gpt-vis-mcp",
     version: "0.0.5",
   },
-  { capabilities: { tools: {} } },
+  { capabilities: { tools: {} } }
 );
 console.log("✅ MCP server instance created successfully");
 
@@ -179,7 +184,7 @@ async function generateChart(options: ChartOptions): Promise<ChartResult> {
     const duration = Date.now() - startTime;
 
     console.log(
-      `✅ Chart generated successfully in ${duration}ms: ${imageUrl}`,
+      `✅ Chart generated successfully in ${duration}ms: ${imageUrl}`
     );
 
     return {
@@ -198,7 +203,7 @@ async function generateChart(options: ChartOptions): Promise<ChartResult> {
     const errorMessage = error instanceof Error ? error.message : String(error);
     console.error(
       `❌ Chart generation failed after ${duration}ms:`,
-      errorMessage,
+      errorMessage
     );
 
     return {
@@ -240,7 +245,7 @@ const registerToolWithLocalExecutor = (tool: MCPTool): void => {
         console.log(
           `📝 Processing data for ${name}:`,
           Object.keys(data).length,
-          "fields",
+          "fields"
         );
 
         // Map the tool name to chart type
@@ -257,9 +262,8 @@ const registerToolWithLocalExecutor = (tool: MCPTool): void => {
 
         return await generateChart(options);
       } catch (error) {
-        const errorMessage = error instanceof Error
-          ? error.message
-          : String(error);
+        const errorMessage =
+          error instanceof Error ? error.message : String(error);
         console.error(`❌ Tool execution failed for ${name}:`, errorMessage);
 
         return {
@@ -272,23 +276,23 @@ const registerToolWithLocalExecutor = (tool: MCPTool): void => {
           ],
         };
       }
-    },
+    }
   );
 };
 
 // Register all supported tools
 const supportedTools = Object.values(tools).filter(
-  (tool: MCPTool) => !CHART_TYPE_UNSUPPORTED.includes(tool.name),
+  (tool: MCPTool) => !CHART_TYPE_UNSUPPORTED.includes(tool.name)
 );
 
 console.log(
   `📦 Registering ${supportedTools.length} supported tools out of ${
     Object.keys(tools).length
-  } total tools`,
+  } total tools`
 );
 console.log(
   `🚫 Skipping ${CHART_TYPE_UNSUPPORTED.length} unsupported tools:`,
-  CHART_TYPE_UNSUPPORTED.join(", "),
+  CHART_TYPE_UNSUPPORTED.join(", ")
 );
 
 supportedTools.forEach(registerToolWithLocalExecutor);
