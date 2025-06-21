@@ -12,7 +12,7 @@ generates charts locally without external server dependencies.
 
 - 🔒 **Private & Secure**: Local chart generation, no external dependencies
 - 🚀 **Easy Setup**: One command installation for Claude Desktop
-- 🎨 **Rich Charts**: 25+ chart types (pie, line, bar, radar, maps, etc.)
+- 🎨 **Rich Charts**: 20+ chart types (pie, line, bar, radar, maps, etc.)
 - 📊 **Enterprise Ready**: Perfect for secure environments
 
 ## 🚀 Usage
