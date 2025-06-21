@@ -17,7 +17,7 @@ import { CHART_TYPE_MAP, CHART_TYPE_UNSUPPORTED } from "./constant.ts";
 /**
  * Configuration for the chart rendering service
  */
-interface ServerConfig {
+export interface ServerConfig {
   /** Directory path where generated images will be saved */
   renderedImagePath: string;
   /** Base URL for accessing images via web server (optional) */
@@ -27,20 +27,30 @@ interface ServerConfig {
 /**
  * Chart generation options
  */
-interface ChartOptions {
+export interface ChartOptions {
   type: string;
   data: Record<string, unknown>;
+  [key: string]: unknown; // Allow additional properties
 }
 
 /**
  * Chart generation result
  */
-interface ChartResult {
+export interface ChartResult {
   isError: boolean;
   content: Array<{
     type: "text";
     text: string;
   }>;
+}
+
+/**
+ * HTTP API Response
+ */
+export interface ChartResponse {
+  success: boolean;
+  resultObj?: string;
+  errorMessage?: string;
 }
 
 /**
@@ -53,7 +63,7 @@ interface MCPTool {
 }
 
 // Server configuration with environment variable support
-const config: ServerConfig = {
+export const config: ServerConfig = {
   renderedImagePath:
     process.env.RENDERED_IMAGE_PATH ?? join(tmpdir(), "gpt-vis-charts"),
   renderedImageHostPath: process.env.RENDERED_IMAGE_HOST_PATH,
@@ -62,7 +72,7 @@ const config: ServerConfig = {
 /**
  * Initialize the chart generation directory
  */
-async function initializeImageDirectory(): Promise<void> {
+export async function initializeImageDirectory(): Promise<void> {
   console.log(`🔍 Checking image directory: ${config.renderedImagePath}`);
 
   try {
@@ -86,6 +96,140 @@ async function initializeImageDirectory(): Promise<void> {
         }`
       );
     }
+  }
+}
+
+/**
+ * Generate a unique filename for the chart image
+ */
+export function generateImageFilename(): string {
+  const id = generateId(8);
+  const timestamp = Date.now();
+  return `chart_${timestamp}_${id}.png`;
+}
+
+/**
+ * Generate the appropriate response URL/path for the generated image
+ * @param filename - The generated filename
+ * @param forHttp - Whether this is for HTTP response (returns relative URL) or MCP (returns full path)
+ */
+export function generateImageResponse(filename: string, forHttp = false): string {
+  if (config.renderedImageHostPath) {
+    return `${config.renderedImageHostPath}/${filename}`;
+  }
+
+  if (forHttp) {
+    // For HTTP server mode, return relative URL
+    return `/charts/${filename}`;
+  }
+
+  // For MCP mode, return full path
+  return join(config.renderedImagePath, filename);
+}
+
+/**
+ * Generate a chart with the given options (MCP format result)
+ */
+export async function generateChart(options: ChartOptions): Promise<ChartResult> {
+  const startTime = Date.now();
+  console.log(`🎨 Starting chart generation: type=${options.type}`);
+
+  try {
+    // Render the chart using GPT-Vis SSR
+    console.log("🔄 Rendering chart with GPT-Vis SSR...");
+    const vis = await render(options);
+
+    // Generate filename and full path
+    const filename = generateImageFilename();
+    const fullPath = join(config.renderedImagePath, filename);
+    console.log(`💾 Saving chart to: ${filename}`);
+
+    // Export chart to file
+    vis.exportToFile(fullPath, {});
+
+    const imageUrl = generateImageResponse(filename);
+    const duration = Date.now() - startTime;
+
+    console.log(
+      `✅ Chart generated successfully in ${duration}ms: ${imageUrl}`
+    );
+
+    return {
+      isError: false,
+      content: [
+        {
+          type: "text",
+          text: config.renderedImageHostPath
+            ? `Chart generated successfully! Access it at: ${imageUrl}`
+            : `Chart generated and saved to: ${imageUrl}`,
+        },
+      ],
+    };
+  } catch (error) {
+    const duration = Date.now() - startTime;
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error(
+      `❌ Chart generation failed after ${duration}ms:`,
+      errorMessage
+    );
+
+    return {
+      isError: true,
+      content: [
+        {
+          type: "text",
+          text: `Failed to generate chart: ${errorMessage}`,
+        },
+      ],
+    };
+  }
+}
+
+/**
+ * Generate a chart with the given options (HTTP format result)
+ */
+export async function generateChartForHttp(options: ChartOptions): Promise<ChartResponse> {
+  try {
+    const { type, data, ...restOptions } = options;
+
+    // Validate chart type
+    if (!type) {
+      throw new Error("Chart type is required");
+    }
+
+    // Prepare render options
+    const renderOptions = {
+      type,
+      data,
+      ...restOptions,
+    };
+
+    console.log(`🎨 Starting chart generation: type=${type}`);
+    // Render the chart using GPT-Vis SSR
+    const vis = await render(renderOptions);
+    console.log("✅ Successfully rendered chart with GPT-Vis SSR");
+
+    // Generate filename and full path
+    const filename = generateImageFilename();
+    const fullPath = join(config.renderedImagePath, filename);
+
+    // Export chart to file
+    vis.exportToFile(fullPath, {});
+
+    const resultObj = generateImageResponse(filename, true);
+
+    return {
+      success: true,
+      resultObj,
+    };
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error(`❌ Chart generation failed:`, errorMessage);
+
+    return {
+      success: false,
+      errorMessage,
+    };
   }
 }
 
@@ -137,86 +281,6 @@ export const server = new ComposableMCPServer(
   { capabilities: { tools: {} } }
 );
 console.log("✅ MCP server instance created successfully");
-
-/**
- * Generate a unique filename for the chart image
- */
-function generateImageFilename(): string {
-  const id = generateId(8);
-  const timestamp = Date.now();
-  return `chart_${timestamp}_${id}.png`;
-}
-
-/**
- * Generate the appropriate response URL/path for the generated image
- */
-function generateImageResponse(filename: string): string {
-  const fullPath = join(config.renderedImagePath, filename);
-
-  if (config.renderedImageHostPath) {
-    return `${config.renderedImageHostPath}/${filename}`;
-  }
-
-  return fullPath;
-}
-
-/**
- * Generate a chart with the given options
- */
-async function generateChart(options: ChartOptions): Promise<ChartResult> {
-  const startTime = Date.now();
-  console.log(`🎨 Starting chart generation: type=${options.type}`);
-
-  try {
-    // Render the chart using GPT-Vis SSR
-    console.log("🔄 Rendering chart with GPT-Vis SSR...");
-    const vis = await render(options);
-
-    // Generate filename and full path
-    const filename = generateImageFilename();
-    const fullPath = join(config.renderedImagePath, filename);
-    console.log(`💾 Saving chart to: ${filename}`);
-
-    // Export chart to file
-    await vis.exportToFile(fullPath, {});
-
-    const imageUrl = generateImageResponse(filename);
-    const duration = Date.now() - startTime;
-
-    console.log(
-      `✅ Chart generated successfully in ${duration}ms: ${imageUrl}`
-    );
-
-    return {
-      isError: false,
-      content: [
-        {
-          type: "text",
-          text: config.renderedImageHostPath
-            ? `Chart generated successfully! Access it at: ${imageUrl}`
-            : `Chart generated and saved to: ${imageUrl}`,
-        },
-      ],
-    };
-  } catch (error) {
-    const duration = Date.now() - startTime;
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    console.error(
-      `❌ Chart generation failed after ${duration}ms:`,
-      errorMessage
-    );
-
-    return {
-      isError: true,
-      content: [
-        {
-          type: "text",
-          text: `Failed to generate chart: ${errorMessage}`,
-        },
-      ],
-    };
-  }
-}
 
 /**
  * Register a tool with custom chart generation executor

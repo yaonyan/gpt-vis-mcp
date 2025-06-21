@@ -5,138 +5,34 @@
  * while maintaining the same local chart generation capabilities.
  */
 
-import { render } from "@antv/gpt-vis-ssr";
-import { generateId } from "ai";
-import { access, constants, mkdir } from "node:fs/promises";
-import { tmpdir } from "node:os";
 import { join } from "node:path";
-import process from "node:process";
+import {
+  type ChartOptions,
+  type ServerConfig,
+  config,
+  generateChartForHttp,
+  initializeImageDirectory,
+} from "./app.ts";
 
 /**
  * HTTP API Request body
  */
-interface ChartRequest {
-  type: string;
-  data: Record<string, unknown>;
+interface ChartRequest extends ChartOptions {
   [key: string]: unknown; // Allow additional properties
 }
 
 /**
- * HTTP API Response
+ * Server configuration for HTTP mode
  */
-interface ChartResponse {
-  success: boolean;
-  resultObj?: string;
-  errorMessage?: string;
-}
-
-/**
- * Server configuration
- */
-interface ServerConfig {
-  renderedImagePath: string;
-  renderedImageHostPath?: string;
+interface HttpServerConfig extends ServerConfig {
   port: number;
 }
 
-// Configuration
-const config: ServerConfig = {
-  renderedImagePath:
-    process.env.RENDERED_IMAGE_PATH ?? join(tmpdir(), "gpt-vis-charts"),
-  renderedImageHostPath: process.env.RENDERED_IMAGE_HOST_PATH,
-  port: parseInt(process.env.PORT ?? "3000", 10),
+// HTTP server specific configuration
+const httpConfig: HttpServerConfig = {
+  ...config,
+  port: parseInt(Deno.env.get("PORT") ?? "3000", 10),
 };
-
-/**
- * Initialize the chart generation directory
- */
-async function initializeImageDirectory(): Promise<void> {
-  try {
-    await access(config.renderedImagePath, constants.F_OK);
-  } catch {
-    try {
-      await mkdir(config.renderedImagePath, { recursive: true });
-    } catch (error) {
-      console.error(
-        `❌ Failed to create directory ${config.renderedImagePath}:`,
-        error
-      );
-      throw new Error(
-        `Failed to initialize image directory: ${
-          error instanceof Error ? error.message : String(error)
-        }`
-      );
-    }
-  }
-}
-
-/**
- * Generate a unique filename for the chart image
- */
-function generateImageFilename(): string {
-  const id = generateId(8);
-  const timestamp = Date.now();
-  return `chart_${timestamp}_${id}.png`;
-}
-
-/**
- * Generate the appropriate response URL/path for the generated image
- */
-function generateImageResponse(filename: string): string {
-  if (config.renderedImageHostPath) {
-    return `${config.renderedImageHostPath}/${filename}`;
-  }
-
-  // For HTTP server mode, return relative URL
-  return `/charts/${filename}`;
-}
-
-/**
- * Generate a chart with the given request
- */
-async function generateChart(request: ChartRequest): Promise<ChartResponse> {
-  try {
-    const { type, data, ...restOptions } = request;
-
-    // Validate chart type
-    if (!type) {
-      throw new Error("Chart type is required");
-    }
-
-    // Prepare render options
-    const options = {
-      type,
-      data,
-      ...restOptions,
-    };
-
-    console.log(`🎨 Starting chart generation: type=${type}`);
-    // Render the chart using GPT-Vis SSR
-    const vis = await render(options);
-
-    // Generate filename and full path
-    const filename = generateImageFilename();
-    const fullPath = join(config.renderedImagePath, filename);
-
-    // Export chart to file
-    await vis.exportToFile(fullPath, {});
-
-    const resultObj = generateImageResponse(filename);
-
-    return {
-      success: true,
-      resultObj,
-    };
-  } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    console.error(`❌ Chart generation failed:`, errorMessage);
-
-    return {
-      success: false,
-      errorMessage,
-    };
-  }
-}
 
 /**
  * Start the HTTP server
@@ -145,7 +41,7 @@ export async function startHttpServer(): Promise<void> {
   // Initialize directory
   await initializeImageDirectory();
 
-  const server = Deno.serve({ port: config.port }, async (request: Request) => {
+  const server = Deno.serve({ port: httpConfig.port }, async (request: Request) => {
     const url = new URL(request.url);
 
     // CORS headers
@@ -180,7 +76,7 @@ export async function startHttpServer(): Promise<void> {
     if (url.pathname === "/generate" && request.method === "POST") {
       try {
         const requestBody = (await request.json()) as ChartRequest;
-        const result = await generateChart(requestBody);
+        const result = await generateChartForHttp(requestBody);
 
         return new Response(JSON.stringify(result), {
           headers: {
@@ -211,7 +107,7 @@ export async function startHttpServer(): Promise<void> {
     // Serve generated chart images
     if (url.pathname.startsWith("/charts/") && request.method === "GET") {
       const filename = url.pathname.replace("/charts/", "");
-      const filePath = join(config.renderedImagePath, filename);
+      const filePath = join(httpConfig.renderedImagePath, filename);
 
       try {
         const file = await Deno.open(filePath, { read: true });
@@ -303,11 +199,11 @@ export async function startHttpServer(): Promise<void> {
   });
 
   console.log(`🌟 GPT-Vis MCP HTTP Server started!`);
-  console.log(`📊 Port: ${config.port}`);
-  console.log(`📁 Image directory: ${config.renderedImagePath}`);
-  console.log(`🌐 Image host: ${config.renderedImageHostPath || "local"}`);
-  console.log(`🚀 API docs: http://localhost:${config.port}/`);
-  console.log(`💚 Health check: http://localhost:${config.port}/health`);
+  console.log(`📊 Port: ${httpConfig.port}`);
+  console.log(`📁 Image directory: ${httpConfig.renderedImagePath}`);
+  console.log(`🌐 Image host: ${httpConfig.renderedImageHostPath || "local"}`);
+  console.log(`🚀 API docs: http://localhost:${httpConfig.port}/`);
+  console.log(`💚 Health check: http://localhost:${httpConfig.port}/health`);
 
   // Keep the server running
   await server.finished;
