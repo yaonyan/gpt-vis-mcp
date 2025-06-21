@@ -78,6 +78,24 @@ docker run -p 3000:3000 -e RENDERED_IMAGE_HOST_PATH=http://localhost:3000/charts
 {"success":true,"resultObj":"http://localhost:3000/charts/chart_1750500506056_T6IC0Vtp.png"}
 ```
 
+You can then use the SSR server with the upstream `@antv/mcp-server-chart` by specifying the `VIS_REQUEST_SERVER` environment variable:
+
+```json
+{
+  "mcpServers": {
+    "mcp-server-chart": {
+      "command": "npx",
+      "args": ["-y", "@antv/mcp-server-chart"],
+      "env": {
+        "VIS_REQUEST_SERVER": "http://localhost:3000/generate"
+      }
+    }
+  }
+}
+```
+
+This allows you to use the original MCP server while leveraging your local SSR endpoint for chart generation.
+
 ## 🤝 Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup.
