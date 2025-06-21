@@ -7,7 +7,6 @@
  *
  * @credit https://github.com/antvis/mcp-server-chart/blob/main/src/utils/callTool.ts
  * @author Yao
- * @version 0.1.0
  */
 
 /**

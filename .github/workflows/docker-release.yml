@@ -31,4 +31,6 @@ jobs:
           context: .
           file: ./Dockerfile.${{ matrix.mode }}
           push: true
-          tags: ghcr.io/${{ github.repository }}:${{ github.ref_name }}-${{ matrix.mode }}
+          tags: |
+            ghcr.io/${{ github.repository }}:${{ github.ref_name }}-${{ matrix.mode }}
+            ghcr.io/${{ github.repository }}:latest-${{ matrix.mode }}

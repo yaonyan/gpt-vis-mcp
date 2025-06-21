@@ -110,7 +110,7 @@ const tools = await composeMcpDepTools({
 export const server = new ComposableMCPServer(
   {
     name: "gpt-vis-mcp",
-    version: "0.1.0",
+    version: "0.0.3",
   },
   { capabilities: { tools: {} } },
 );

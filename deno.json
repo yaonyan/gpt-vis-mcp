@@ -1,6 +1,6 @@
 {
   "name": "@yao/gpt-vis-mcp",
-  "version": "0.1.0",
+  "version": "0.0.3",
   "nodeModulesDir": "auto",
   "imports": {
     "@antv/gpt-vis-ssr": "npm:@antv/gpt-vis-ssr@^0.1.6",
