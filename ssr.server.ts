@@ -110,6 +110,7 @@ async function generateChart(request: ChartRequest): Promise<ChartResponse> {
       ...restOptions,
     };
 
+    console.log(`🎨 Starting chart generation: type=${type}`);
     // Render the chart using GPT-Vis SSR
     const vis = await render(options);
 

@@ -65,9 +65,8 @@ RUN mkdir -p $DENO_DIR $RENDERED_IMAGE_PATH
 COPY . .
 
 # Install and cache dependencies
-RUN deno install --allow-scripts=npm:canvas@3.1.0 && \
-    cp -rf node_modules/.deno/canvas@3.1.0/node_modules node_modules/.deno/canvas@2.11.2/ 2>/dev/null || true && \
-    deno cache --allow-scripts=npm:canvas@3.1.0 ssr.server.ts
+RUN deno install --allow-scripts=npm:canvas@3.1.1 && rm -rf node_modules/.deno/canvas@2.11.2 &&  cp -r node_modules/.deno/canvas@3.1.1 node_modules/.deno/canvas@2.11.2 && \
+    deno cache ssr.server.ts
 
 # Labels for image identification
 LABEL org.opencontainers.image.source="https://github.com/yaonyan/gpt-vis-mcp"
