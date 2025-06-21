@@ -1,10 +1,12 @@
 # GPT-Vis MCP Server
 
-A **local wrapper** for
+A **local/private-favored wrapper** for
 [antvis/mcp-server-chart](https://github.com/antvis/mcp-server-chart) that
 generates charts locally without external server dependencies.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![npm version](https://img.shields.io/npm/v/@jsr2npm/yao__gpt-vis-mcp.svg)](https://www.npmjs.com/package/@jsr2npm/yao__gpt-vis-mcp)
+[![MCP](https://img.shields.io/badge/Model%20Context%20Protocol-Compatible-blue.svg)](https://modelcontextprotocol.io/)
 
 ## ✨ Features
 
@@ -26,7 +28,7 @@ Add to your Claude Desktop MCP settings:
   "mcpServers": {
     "gpt-vis-mcp": {
       "command": "npx",
-      "args": ["@jsr2npm/yao__gpt-vis-mcp@0.0.3"]
+      "args": ["@jsr2npm/yao__gpt-vis-mcp@latest"]
     }
   }
 }
