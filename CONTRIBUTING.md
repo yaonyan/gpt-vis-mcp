@@ -13,7 +13,7 @@
 ```bash
 git clone https://github.com/yaonyan/gpt-vis-mcp.git
 cd gpt-vis-mcp
-deno install --allow-scripts=npm:canvas@3.1.1 && rm -rf node_modules/.deno/canvas@2.11.2 &&  cp -r node_modules/.deno/canvas@3.1.1 node_modules/.deno/canvas@2.11.2
+deno install --allow-scripts=npm:canvas@3.1.1 && rm -rf node_modules/.deno/canvas@2.11.2 && cp -r node_modules/.deno/canvas@3.1.1 node_modules/.deno/canvas@2.11.2
 
 # Start development
 deno run -A --watch ssr.server.ts     # SSR mode

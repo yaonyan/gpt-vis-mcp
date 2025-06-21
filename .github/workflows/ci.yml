@@ -21,6 +21,6 @@ jobs:
           deno-version: v2.x
 
       - name: Install dependencies
-        run: deno install --allow-scripts=npm:canvas@3.1.1 && rm -rf node_modules/.deno/canvas@2.11.2 &&  cp -r node_modules/.deno/canvas@3.1.1 node_modules/.deno/canvas@2.11.2
+        run: deno install --allow-scripts=npm:canvas@3.1.1 && rm -rf node_modules/.deno/canvas@2.11.2 && cp -r node_modules/.deno/canvas@3.1.1 node_modules/.deno/canvas@2.11.2
       - name: Run tests
         run: deno test --allow-all
