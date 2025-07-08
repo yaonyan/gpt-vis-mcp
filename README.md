@@ -34,6 +34,9 @@ Add to your Claude Desktop MCP settings:
 }
 ```
 
+![image](https://github.com/user-attachments/assets/d3304366-c9f3-463d-ac05-4ddc96d4b829)
+
+
 You may experience `canvas` dependency issues and font rendering issues when using npx. If so, try option 2.
 
 **Option 2: Docker**
