@@ -28,7 +28,7 @@ Add to your Claude Desktop MCP settings:
   "mcpServers": {
     "gpt-vis-mcp": {
       "command": "npx",
-      "args": ["@jsr2npm/yao__gpt-vis-mcp@latest"]
+      "args": ["-y", "@jsr2npm/yao__gpt-vis-mcp@latest"]
     }
   }
 }
