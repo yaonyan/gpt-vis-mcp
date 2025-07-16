@@ -113,7 +113,10 @@ export function generateImageFilename(): string {
  * @param filename - The generated filename
  * @param forHttp - Whether this is for HTTP response (returns relative URL) or MCP (returns full path)
  */
-export function generateImageResponse(filename: string, forHttp = false): string {
+export function generateImageResponse(
+  filename: string,
+  forHttp = false
+): string {
   if (config.renderedImageHostPath) {
     return `${config.renderedImageHostPath}/${filename}`;
   }
@@ -130,7 +133,9 @@ export function generateImageResponse(filename: string, forHttp = false): string
 /**
  * Generate a chart with the given options (MCP format result)
  */
-export async function generateChart(options: ChartOptions): Promise<ChartResult> {
+export async function generateChart(
+  options: ChartOptions
+): Promise<ChartResult> {
   const startTime = Date.now();
   console.log(`🎨 Starting chart generation: type=${options.type}`);
 
@@ -188,7 +193,9 @@ export async function generateChart(options: ChartOptions): Promise<ChartResult>
 /**
  * Generate a chart with the given options (HTTP format result)
  */
-export async function generateChartForHttp(options: ChartOptions): Promise<ChartResponse> {
+export async function generateChartForHttp(
+  options: ChartOptions
+): Promise<ChartResponse> {
   try {
     const { type, data, ...restOptions } = options;
 
@@ -255,13 +262,8 @@ console.log("🔧 Composing MCP tools from upstream chart server...");
 const tools = await composeMcpDepTools({
   mcpServers: {
     "mcp-server-chart": {
-      command: "deno",
-      args: [
-        "run",
-        "--cached-only",
-        "--allow-all",
-        "npm:@antv/mcp-server-chart@0.7.1",
-      ],
+      command: "npx",
+      args: ["-y", "@antv/mcp-server-chart@0.7.1"],
     },
   },
 });
