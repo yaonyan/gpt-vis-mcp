@@ -28,11 +28,14 @@ Add to your Claude Desktop MCP settings:
   "mcpServers": {
     "gpt-vis-mcp": {
       "command": "npx",
-      "args": ["@jsr2npm/yao__gpt-vis-mcp@latest"]
+      "args": ["-y", "@jsr2npm/yao__gpt-vis-mcp@latest"]
     }
   }
 }
 ```
+
+![image](https://github.com/user-attachments/assets/d3304366-c9f3-463d-ac05-4ddc96d4b829)
+
 
 You may experience `canvas` dependency issues and font rendering issues when using npx. If so, try option 2.
 
