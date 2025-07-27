@@ -1,23 +1,19 @@
 {
   "name": "@yao/gpt-vis-mcp",
-  "version": "0.0.8",
+  "version": "0.1.0",
   "nodeModulesDir": "auto",
   "imports": {
-    "@antv/gpt-vis-ssr": "npm:@antv/gpt-vis-ssr@^0.1.10",
     "@antv/mcp-server-chart": "npm:@antv/mcp-server-chart@^0.8.0",
     "@deno/dnt": "jsr:@deno/dnt@^0.42.1",
     "@mcpc/core": "jsr:/@mcpc/core@^0.0.28",
     "@modelcontextprotocol/sdk": "npm:@modelcontextprotocol/sdk@^1.8.0",
-    "@yaonyan/gpt-vis-ssr-napi-rs": "npm:@yaonyan/gpt-vis-ssr-napi-rs@^0.2.1",
-    "ai": "npm:ai@^4.3.4",
-    "canvas": "npm:canvas@3.1.1"
+    "@yaonyan/gpt-vis-ssr-napi-rs": "npm:@yaonyan/gpt-vis-ssr-napi-rs@0.2.4",
+    "ai": "npm:ai@^4.3.4"
   },
   "exports": {
     "./bin": "./stdio.server.ts"
   },
-  "tasks": {
-    "compile": "deno install --allow-scripts=npm:canvas@3.1.1 && rm -rf node_modules/.deno/canvas@2.11.2 && cp -r node_modules/.deno/canvas@3.1.1 node_modules/.deno/canvas@2.11.2"
-  },
+  "tasks": {},
   "lint": {
     "rules": {
       "exclude": ["no-explicit-any"]
