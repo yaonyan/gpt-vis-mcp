@@ -5,7 +5,7 @@
  * without external server dependencies.
  */
 
-import { render } from "@antv/gpt-vis-ssr";
+import { render } from "@yaonyan/gpt-vis-ssr-napi-rs";
 import { ComposableMCPServer, composeMcpDepTools } from "@mcpc/core";
 import { generateId, jsonSchema } from "ai";
 import { access, constants, mkdir } from "node:fs/promises";
