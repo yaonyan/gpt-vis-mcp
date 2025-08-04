@@ -1,11 +1,11 @@
 {
   "name": "@yao/gpt-vis-mcp",
-  "version": "0.1.0",
+  "version": "0.1.1-beta.1",
   "nodeModulesDir": "auto",
   "imports": {
     "@antv/mcp-server-chart": "npm:@antv/mcp-server-chart@^0.8.0",
     "@deno/dnt": "jsr:@deno/dnt@^0.42.1",
-    "@mcpc/core": "jsr:/@mcpc/core@^0.0.28",
+    "@mcpc/core": "jsr:@mcpc/core@0.1.1-beta.1",
     "@modelcontextprotocol/sdk": "npm:@modelcontextprotocol/sdk@^1.8.0",
     "@yaonyan/gpt-vis-ssr-napi-rs": "npm:@yaonyan/gpt-vis-ssr-napi-rs@0.2.4",
     "ai": "npm:ai@^4.3.4"

@@ -1,6 +1,12 @@
 // deno install --allow-scripts=npm:canvas@2.11.2
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import { server } from "./app.ts";
+import { cleanupClients, server } from "./app.ts";
 
 const transport = new StdioServerTransport();
+
+transport.onclose = async () => {
+  await cleanupClients();
+  console.log("🔌 Transport closed, cleaning up dependent clients...");
+};
+
 await server.connect(transport);
