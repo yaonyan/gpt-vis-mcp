@@ -68,7 +68,7 @@ RUN deno task compile && \
 # Labels for image identification
 LABEL org.opencontainers.image.source="https://github.com/yaonyan/gpt-vis-mcp"
 LABEL org.opencontainers.image.title="gpt-vis-mcp"
-LABEL org.opencontainers.image.description="GPT-Vis MCP Server - MCP Mode"
+LABEL org.opencontainers.image.description="GPT-Vis MCP Server"
 
 # Set the entrypoint to directly run the stdio server
 CMD ["deno", "run", "--cached-only", "--allow-all", "stdio.server.ts"]

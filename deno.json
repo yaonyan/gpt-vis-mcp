@@ -5,7 +5,7 @@
   "imports": {
     "@antv/mcp-server-chart": "npm:@antv/mcp-server-chart@^0.8.0",
     "@deno/dnt": "jsr:@deno/dnt@^0.42.1",
-    "@mcpc/core": "jsr:@mcpc/core@0.1.1-beta.1",
+    "@mcpc/core": "jsr:@mcpc/core@0.2.0-beta.4",
     "@modelcontextprotocol/sdk": "npm:@modelcontextprotocol/sdk@^1.8.0",
     "@yaonyan/gpt-vis-ssr-napi-rs": "npm:@yaonyan/gpt-vis-ssr-napi-rs@0.2.4",
     "ai": "npm:ai@^4.3.4"
@@ -13,7 +13,9 @@
   "exports": {
     "./bin": "./stdio.server.ts"
   },
-  "tasks": {},
+  "tasks": {
+    "compile": "deno cache --allow-scripts=npm:canvas@3.2.0 stdio.server.ts ssr.server.ts"
+  },
   "lint": {
     "rules": {
       "exclude": ["no-explicit-any"]
