@@ -1,6 +1,6 @@
 {
   "name": "@yao/gpt-vis-mcp",
-  "version": "0.1.1-beta.3",
+  "version": "0.1.1-beta.4",
   "nodeModulesDir": "auto",
   "imports": {
     "@antv/mcp-server-chart": "npm:@antv/mcp-server-chart@^0.8.0",
