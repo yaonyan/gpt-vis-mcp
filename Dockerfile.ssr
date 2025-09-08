@@ -5,7 +5,7 @@ FROM denoland/deno:2.3.6
 LABEL name="gpt-vis-mcp"
 LABEL version="${TAG:-latest}"
 LABEL maintainer="gpt-vis-mcp-team"
-LABEL description="GPT-Vis MCP Server - HTTP Mode"
+LABEL description="GPT-Vis MCP Server - SSR Mode"
 
 # Build argument for tag
 ARG TAG=latest

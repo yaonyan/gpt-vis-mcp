@@ -9,6 +9,7 @@
     "jsr:@mcpc/core@0.2.0-beta.4": "0.2.0-beta.4",
     "jsr:@mcpc/utils@0.1": "0.1.0",
     "jsr:@std/bytes@^1.0.5": "1.0.6",
+    "jsr:@std/cli@^1.0.22": "1.0.22",
     "jsr:@std/fmt@1": "1.0.8",
     "jsr:@std/fmt@^1.0.3": "1.0.8",
     "jsr:@std/fs@1": "1.0.18",
@@ -95,6 +96,9 @@
     },
     "@std/bytes@1.0.6": {
       "integrity": "f6ac6adbd8ccd99314045f5703e23af0a68d7f7e58364b47d2c7f408aeb5820a"
+    },
+    "@std/cli@1.0.22": {
+      "integrity": "50d1e4f87887cb8a8afa29b88505ab5081188f5cad3985460c3b471fa49ff21a"
     },
     "@std/fmt@1.0.8": {
       "integrity": "71e1fc498787e4434d213647a6e43e794af4fd393ef8f52062246e06f7e372b7"
@@ -6119,6 +6123,7 @@
     "dependencies": [
       "jsr:@deno/dnt@~0.42.1",
       "jsr:@mcpc/core@0.2.0-beta.4",
+      "jsr:@std/cli@^1.0.22",
       "npm:@antv/mcp-server-chart@0.8",
       "npm:@modelcontextprotocol/sdk@^1.8.0",
       "npm:@yaonyan/gpt-vis-ssr-napi-rs@0.2.4",

@@ -39,7 +39,12 @@ RUN echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen && \
 
 # Install Node.js (latest LTS) and node-gyp - required for canvas
 RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - \
-    && apt-get install -y nodejs 
+    && apt-get install -y nodejs
+
+# Install Python and uv for mcp-proxy (needed for SSE mode)
+RUN python3 -m ensurepip && \
+    pip install --no-cache-dir uv && \
+    uv tool install mcp-proxy 
 
 # Set working directory
 WORKDIR /app
@@ -53,7 +58,8 @@ ENV RENDERED_IMAGE_PATH=/tmp/gpt-vis-charts \
     DENO_INSTALL_ROOT=/deno-dir/install-root \
     LANG=zh_CN.UTF-8 \
     LANGUAGE=zh_CN:zh \
-    LC_ALL=zh_CN.UTF-8 
+    LC_ALL=zh_CN.UTF-8 \
+    PATH="/root/.local/bin:$PATH" 
 
 # Create necessary directories
 RUN mkdir -p $DENO_DIR $RENDERED_IMAGE_PATH
@@ -63,12 +69,17 @@ COPY . .
 
 # Install and cache dependencies
 RUN deno task compile && \
-    deno cache stdio.server.ts
+    deno cache server.ts
 
 # Labels for image identification
 LABEL org.opencontainers.image.source="https://github.com/yaonyan/gpt-vis-mcp"
 LABEL org.opencontainers.image.title="gpt-vis-mcp"
 LABEL org.opencontainers.image.description="GPT-Vis MCP Server"
 
-# Set the entrypoint to directly run the stdio server
-CMD ["deno", "run", "--cached-only", "--allow-all", "stdio.server.ts"]
+# Set the entrypoint to use the simple server with transport flag
+# Transport modes: stdio (default), sse
+# Usage examples:
+#   stdio mode: docker run image
+#   sse mode:   docker run image --transport sse --port 3000 --host 0.0.0.0
+ENTRYPOINT ["deno", "run", "--cached-only", "--allow-all", "server.ts"]
+CMD ["--transport", "stdio"]

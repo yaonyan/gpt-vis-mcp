@@ -110,7 +110,7 @@ Deno.test("chart generation", async () => {
 1. **Canvas Dependencies**
 
    ```bash
-   deno install --allow-scripts=npm:canvas@3.1.0
+   deno install --allow-scripts=npm:canvas@3.2.0
    ```
 
 2. **Permissions**

@@ -34,12 +34,38 @@ Add to your Claude Desktop MCP settings:
 }
 ```
 
+**Option 2: Deno Direct**
+
+```json
+{
+  "mcpServers": {
+    "gpt-vis-mcp": {
+      "command": "deno",
+      "args": ["run", "--allow-all", "@yao/gpt-vis-mcp/bin"]
+    }
+  }
+}
+```
+
+**Option 3: NPX + Deno**
+
+```json
+{
+  "mcpServers": {
+    "gpt-vis-mcp": {
+      "command": "npx",
+      "args": ["-y", "deno", "run", "--allow-all", "@yao/gpt-vis-mcp/bin"]
+    }
+  }
+}
+```
+
 ![image](https://github.com/user-attachments/assets/d3304366-c9f3-463d-ac05-4ddc96d4b829)
 
 
-You may experience `canvas` dependency issues and font rendering issues when using npx. If so, try option 2.
+You may experience `canvas` dependency issues and font rendering issues when using npx. If so, try option 4.
 
-**Option 2: Docker**
+**Option 4: Docker**
 
 ```json
 {
@@ -57,6 +83,51 @@ You may experience `canvas` dependency issues and font rendering issues when usi
     }
   }
 }
+```
+
+### Direct Command Line Usage
+
+You can also run the server directly with various transport modes:
+
+```bash
+# Using JSR package (recommended)
+# Default stdio mode (for MCP clients)
+deno run --allow-all @yao/gpt-vis-mcp/bin
+
+# SSE server mode
+deno run --allow-all @yao/gpt-vis-mcp/bin --transport sse --port 3000 --host localhost
+
+# Short form
+deno run --allow-all @yao/gpt-vis-mcp/bin -t sse -p 3000 -h localhost
+
+# Show help
+deno run --allow-all @yao/gpt-vis-mcp/bin --help
+```
+
+```bash
+# Alternative: Using npx with deno
+# Default stdio mode
+npx -y deno run --allow-all @yao/gpt-vis-mcp/bin
+
+# SSE server mode  
+npx -y deno run --allow-all @yao/gpt-vis-mcp/bin --transport sse --port 3000
+
+# Show help
+npx -y deno run --allow-all @yao/gpt-vis-mcp/bin --help
+```
+
+**Transport Modes:**
+- `stdio`: Direct MCP protocol communication via stdin/stdout (default)
+- `sse`: Server-Sent Events HTTP server for web clients
+
+### Docker with SSE Mode
+
+```bash
+# Run with SSE server
+docker run -p 3000:3000 ghcr.io/yaonyan/gpt-vis-mcp:latest-mcp --transport sse --port 3000 --host 0.0.0.0
+
+# Access the SSE endpoint
+curl http://localhost:3000/sse
 ```
 
 Set environment variables as needed:
