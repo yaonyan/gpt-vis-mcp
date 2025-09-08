@@ -1,14 +1,14 @@
 # Use official Deno image with Debian base for better canvas support
 FROM denoland/deno:2.3.6
 
-# Build argument for tag
-ARG TAG=latest
-
 # Set image metadata
 LABEL name="gpt-vis-mcp"
-LABEL version="${TAG}"
+LABEL version="${TAG:-latest}"
 LABEL maintainer="gpt-vis-mcp-team"
 LABEL description="GPT-Vis MCP Server - MCP Mode"
+
+# Build argument for tag
+ARG TAG=latest
 
 # Install system dependencies for canvas and Node.js
 RUN apt-get update && apt-get install -y \
@@ -43,7 +43,7 @@ RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - \
 
 # Install uv and mcp-proxy (needed for SSE mode)
 RUN curl -LsSf https://astral.sh/uv/install.sh | sh && \
-    /root/.cargo/bin/uv tool install mcp-proxy 
+    /root/.local/bin/uv tool install mcp-proxy 
 
 # Set working directory
 WORKDIR /app
@@ -58,7 +58,7 @@ ENV RENDERED_IMAGE_PATH=/tmp/gpt-vis-charts \
     LANG=zh_CN.UTF-8 \
     LANGUAGE=zh_CN:zh \
     LC_ALL=zh_CN.UTF-8 \
-    PATH="/root/.local/bin:/root/.cargo/bin:$PATH" 
+    PATH="/root/.local/bin:$PATH" 
 
 # Create necessary directories
 RUN mkdir -p $DENO_DIR $RENDERED_IMAGE_PATH
