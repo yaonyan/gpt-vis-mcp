@@ -1,6 +1,6 @@
 {
   "name": "@yao/gpt-vis-mcp",
-  "version": "0.1.1-beta.5",
+  "version": "0.1.1",
   "nodeModulesDir": "auto",
   "imports": {
     "@antv/mcp-server-chart": "npm:@antv/mcp-server-chart@^0.8.0",
@@ -15,7 +15,7 @@
     "./bin": "./server.ts"
   },
   "tasks": {
-    "compile": "deno cache --allow-scripts=npm:canvas@3.2.0 stdio.server.ts ssr.server.ts"
+    "compile": "deno cache --allow-scripts=npm:canvas@3.2.0 ssr.server.ts server.ts"
   },
   "lint": {
     "rules": {
