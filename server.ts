@@ -82,11 +82,20 @@ async function startStdio() {
 }
 
 async function startProxy(transport: string, port: number, host: string) {
+  // Check if running in cached-only mode (e.g., in Docker offline environment)
+  const cachedOnlyFlag = Deno.env.get("DENO_CACHED_ONLY") === "true" ? "--cached-only" : "";
+  
+  const denoArgs = ["deno", "run"];
+  if (cachedOnlyFlag) {
+    denoArgs.push(cachedOnlyFlag);
+  }
+  denoArgs.push("--allow-all", import.meta.url, "stdio");
+  
   const args = [
     "--port", port.toString(),
     "--host", host,
     "--allow-origin", "*",
-    "--", "deno", "run", "--allow-all", import.meta.url, "stdio"
+    "--", ...denoArgs
   ];
 
   const process = new Deno.Command("mcp-proxy", { args });
