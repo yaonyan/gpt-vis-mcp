@@ -15,7 +15,7 @@
     "./bin": "./server.ts"
   },
   "tasks": {
-    "compile": "deno cache --allow-scripts=npm:canvas@3.2.0 ssr.server.ts server.ts"
+    "compile": "deno cache --allow-scripts=npm:canvas@3.2.0 ssr.server.ts server.ts stdio.server.ts app.ts"
   },
   "lint": {
     "rules": {

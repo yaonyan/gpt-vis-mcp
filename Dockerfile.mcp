@@ -55,6 +55,7 @@ COPY deno.json deno.lock* ./
 ENV RENDERED_IMAGE_PATH=/tmp/gpt-vis-charts \
     DENO_DIR=/deno-dir \
     DENO_INSTALL_ROOT=/deno-dir/install-root \
+    DENO_CACHED_ONLY=true \
     LANG=zh_CN.UTF-8 \
     LANGUAGE=zh_CN:zh \
     LC_ALL=zh_CN.UTF-8 \
@@ -67,8 +68,11 @@ RUN mkdir -p $DENO_DIR $RENDERED_IMAGE_PATH
 COPY . .
 
 # Install and cache dependencies
+# Cache all entry points and their dependencies for offline usage
 RUN deno task compile && \
-    deno cache server.ts
+    deno cache --allow-scripts=npm:canvas@3.2.0 server.ts && \
+    deno cache --allow-scripts=npm:canvas@3.2.0 stdio.server.ts && \
+    deno cache --allow-scripts=npm:canvas@3.2.0 app.ts
 
 # Labels for image identification
 LABEL org.opencontainers.image.source="https://github.com/yaonyan/gpt-vis-mcp"

@@ -51,6 +51,29 @@ docker-compose --profile ssr up     # SSR mode
 docker-compose --profile mcp up     # MCP mode
 ```
 
+### Offline Environment Support
+
+The Docker images are designed to work in offline/air-gapped environments. During the build phase, all dependencies are cached:
+
+```bash
+# The build process caches all dependencies
+docker build -f Dockerfile.mcp -t gpt-vis-mcp:mcp .
+```
+
+The `DENO_CACHED_ONLY` environment variable is set to `true` by default in the Docker image, ensuring that:
+- No network requests are made at runtime
+- All dependencies must be cached during build
+- SSE mode spawned processes also run in cached-only mode
+
+To test offline behavior locally:
+```bash
+# Build the image with network access
+docker build -f Dockerfile.mcp -t gpt-vis-mcp:mcp .
+
+# Run without network access to verify offline capability
+docker run --network none -p 3000:3000 gpt-vis-mcp:mcp --transport sse --port 3000 --host 0.0.0.0
+```
+
 ## 📁 Project Structure
 
 ```
