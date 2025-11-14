@@ -130,12 +130,15 @@ docker run -p 3000:3000 ghcr.io/yaonyan/gpt-vis-mcp:latest-mcp --transport sse -
 curl http://localhost:3000/sse
 ```
 
+**Offline Environment Support:** The Docker images are designed to work in air-gapped/offline environments. All dependencies are cached during the build phase, and the `DENO_CACHED_ONLY` environment variable ensures no network requests are made at runtime.
+
 Set environment variables as needed:
 
 | Variable                   | Description                   | Default     |
 | -------------------------- | ----------------------------- | ----------- |
 | `RENDERED_IMAGE_PATH`      | Chart images directory        | system temp |
 | `RENDERED_IMAGE_HOST_PATH` | Base URL for accessing images | (optional)  |
+| `DENO_CACHED_ONLY`         | Run in offline mode           | `true` (in Docker) |
 
 ### Docker SSR Server
 
